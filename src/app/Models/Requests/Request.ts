@@ -1,3 +1,4 @@
+import { logging } from 'selenium-webdriver';
 import { CityLocation } from '../UserRole';
 
 export interface ComputerRequestWrapper
@@ -188,4 +189,9 @@ export interface TaskInstanceList
 
  export interface ApplicantWrapper {
     "com.redhat.ba.Applicant" : Applicant
+ }
+
+ export interface Comment {
+     commentedDate : number,
+     message : string;
  }

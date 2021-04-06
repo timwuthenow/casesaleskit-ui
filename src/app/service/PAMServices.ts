@@ -514,4 +514,28 @@ export class PAMServices {
 
   }
 
+  addCaseComment(caseId : String,postdata : string)
+  {
+    let url = this.kieSettings.baseurl + "/services/rest/server/containers/" + this.kieSettings.picontainerAlias + "/cases/instances/"+ caseId + "/comments";
+    const headers = {
+      'Authorization': 'Basic ' +  btoa(this.kieSettings.username + ":" + this.kieSettings.password),
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+     
+    return this.http.post(url, '"'+postdata+'"', { headers });
+  }
+
+  getCaseComments(caseId : String) 
+  {
+    let url = this.kieSettings.baseurl + "/services/rest/server/containers/" + this.kieSettings.picontainerAlias + "/cases/instances/"+ caseId + "/comments";
+    const headers = {
+      'Authorization': 'Basic ' +  btoa(this.kieSettings.username + ":" + this.kieSettings.password),
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+    return this.http.get(url,{headers});
+  }
+
 }

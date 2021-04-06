@@ -91,6 +91,36 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12" style="margin-top:10px;">
+                <div class="card">
+                    <div class="card-header panel-background">Comment History</div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Commented Date</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let rec of commentList">
+                                    <td>{{rec.commentedDate | date : 'MM/dd/yyyy hh:mm a' }}</td>
+                                    <td>{{rec.message }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="id_comments"> Comments :</label>
+                    <textarea class="form-control" [(ngModel)]="message"></textarea>
+                    <button class="btn btn-sm btn-warning" type="button" style="margin-top:10px;" (click)="addComment();">Post Comment</button>
+                </div>
+
+            </div>
             <div style="margin-top:15px" class="col-md-12">
                 <button class="btn btn-dark float-right btn-sm" style="margin-left: 5px;" (click)="updateStatusAndComplete()">Complete Task</button>
                 <!--  <button class="btn btn-primary float-right btn-sm" (click)="onClaimStart()">Start</button> -->

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PAMServices } from 'src/app/service/PAMServices';
 import { KieSettings } from 'src/app/Models/KieSettings/KieSettings';
-import { ServiceRequest, ServiceResponse, Part, Applicant, Loan, TaskInstance } from 'src/app/Models/Requests/Request';
+import { ServiceRequest, ServiceResponse, Part, Applicant, Loan, TaskInstance, Comment } from 'src/app/Models/Requests/Request';
 import { CityLocation, Credentials, UserRole } from 'src/app/Models/UserRole';
 import { faStar, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,6 +18,8 @@ export class ApprovalTaskComponent implements OnInit {
   @Input() currentUser: UserRole;
   cred: Credentials;
   approved: boolean = false;
+  message: string;
+  commentList: Comment[] = new Array();
 
 
 
@@ -38,6 +40,7 @@ export class ApprovalTaskComponent implements OnInit {
     this.service = pamService;
     this.kieSettings = pamService.getCurrentKieSettings();
 
+
   }
 
 
@@ -52,9 +55,28 @@ export class ApprovalTaskComponent implements OnInit {
     this.taskName = this.taskResponse["task-name"];
     this.applicant = this.taskResponse["task-input-data"].applicant;
     this.loan = this.taskResponse["task-input-data"].loan;
+    this.getComments();
+
 
   }
 
+
+  private getComments() {
+    this.commentList = new Array();
+    
+    this.service.getCaseComments(this.caseId).subscribe((res: any) => {
+      if (res.comments && res.comments instanceof Array) {
+        res.comments.forEach(element => {
+          let comment: Comment = {
+            commentedDate: element["added-at"]["java.util.Date"],
+            message: element.text
+          }
+          this.commentList.push(comment);
+        });
+
+      }
+    });
+  }
 
 
   dismiss() {
@@ -85,21 +107,21 @@ export class ApprovalTaskComponent implements OnInit {
     if (this.taskName == "Loan Officer Task")
       postData = { "stage4_status": "completed" };
     if (this.taskName == "Final Approval")
-      postData = { "stage5_status": "completed" };  
+      postData = { "stage5_status": "completed" };
     if (this.taskName == "Precoverage Letter Approval")
-    postData = { "stage6_status": "completed" };  
+      postData = { "stage6_status": "completed" };
     if (this.taskName == "Appraisal Task")
-    postData = { "stage7_status": "completed" };    
+      postData = { "stage7_status": "completed" };
     if (this.taskName == "Title Closing")
-      postData = { "stage8_status": "completed" };  
+      postData = { "stage8_status": "completed" };
 
-    this.service.updateCaseVariables(this.caseId, postData).subscribe((data: any) => { 
+    this.service.updateCaseVariables(this.caseId, postData).subscribe((data: any) => {
       console.log("Updated Case File" + JSON.stringify(postData));
       this.service.updateVariables(this.taskid, { "approved": "true" }, this.cred).subscribe((res: any) => {
-          this.service.completeTaskAutoProgress(this.taskid, "completed", this.cred).subscribe(res => {
-              this.activeModal.close();
-          }, err => { this.readonly = false });
-       });
+        this.service.completeTaskAutoProgress(this.taskid, "completed", this.cred).subscribe(res => {
+          this.activeModal.close();
+        }, err => { this.readonly = false });
+      });
     });
   }
 
@@ -111,8 +133,13 @@ export class ApprovalTaskComponent implements OnInit {
 
   onComplete() {
     this.updateCase();
-    
+  }
 
+  addComment() {
+    this.service.addCaseComment(this.caseId, this.message).subscribe((res: any) => {
+      console.log(res);
+      this.getComments();
+    });
   }
 
 }
