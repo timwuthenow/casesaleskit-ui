@@ -1,0 +1,13 @@
+.paneSettings {
+    font-size: 14px;
+}
+
+label {
+    font-weight: bold;
+}
+
+h4 {
+    text-align: center;
+    padding: 10px;
+    font-weight: 200;
+}

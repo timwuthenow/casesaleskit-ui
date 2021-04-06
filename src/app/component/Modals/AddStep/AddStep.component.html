@@ -1,0 +1,22 @@
+<div class="card">
+    <div class="card-header panel-background">
+        Add New Step
+        <button type="button" class="btn btn-sm btn-warning float-right" aria-label="Close" (click)="dismiss()" style="margin-left:5px;">
+          <fa-icon [icon]="faTimesCircle"></fa-icon>
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_companyName">Step Name</label>
+                    <select class="form-control" [(ngModel)]="selectedStep">
+                      <option *ngFor="let rec of availableStep" [ngValue]="rec">{{rec}}</option>
+                  </select>
+
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-sm btn-warning float-right" type="button" (click)="onAdd()"> Add </button>
+    </div>
+</div>

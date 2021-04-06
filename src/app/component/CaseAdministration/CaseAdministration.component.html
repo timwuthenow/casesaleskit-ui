@@ -1,0 +1,80 @@
+<div class="card">
+    <div class="card-header panel-background">
+        Case Administration
+        <!--   <button class="btn btn-sm btn-danger float-right" type="button" (click)="openDueDate();"> Update Due Date</button> -->
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped" style="margin-top:10px;">
+                    <thead>
+                        <tr>
+                            <th>Case ID</th>
+                            <th>Request ID</th>
+                            <th>Started Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <!-- <th>Num of Parts Ordered</th> -->
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let instance of activeProcessInstances">
+                            <td>{{instance.caseId}}</td>
+                            <td>{{instance.processInstanceId}}</td>
+                            <td>{{instance.startedDate | date : 'MM/dd/yyyy hh:mm a'}}</td>
+                            <td>{{instance.dueDate | date : 'MM/dd/yyyy hh:mm a'}}</td>
+                            <td>{{instance.status}}</td>
+                            <td *ngIf="instance.partList">{{instance.partList.length}}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" type="button" style="margin-left:5px;" (click)="onShowSteps(instance)">Show Steps</button>
+                                <button class="btn btn-sm btn-info" type="button" style="margin-left:5px;" (click)="onShowFlowcase(instance.caseId)">Show/Hide Workflow</button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-12" [hidden]="!allowShowStep">
+                <div class="card">
+                    <div class="card-header panel-background"> Step Status</div>
+                    <div class="card-body">
+                        <div>
+                            <table class="table table-striped" style="font-size:13px;">
+                                <thead>
+                                    <tr>
+                                        <th>Step Name</th>
+                                        <th>Start Date</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
+                                        <th>SLA</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="currentTemplate !== undefined">
+                                    <tr *ngFor="let rec of currentTemplate.steps;index as i">
+                                        <td><span *ngIf="!rec.isNew">{{rec.name}}</span></td>
+                                        <td> {{ rec.startDate | date : 'MM/dd/yyyy hh:mm:ss a' }}</td>
+                                        <td>
+                                            <fa-icon [icon]="faCheckCircle" style="color: green;font-size:20px;" *ngIf="rec.isCompleted"></fa-icon>
+                                            <fa-icon [icon]="faHourglass" style="color: red;font-size:20px;" *ngIf="!rec.isCompleted"></fa-icon>
+                                        </td>
+                                        <td> {{ rec.dueDate | date : 'MM/dd/yyyy hh:mm:ss a' }}</td>
+                                        <td>{{rec.sla}} ( {{rec.slaunit}} )</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-12" [hidden]="!allowSvgContent">
+                <div #svgContent></div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="card">
+    <div class="card-header panel-background">
+        Personal Loan
+    </div>
+    <div class="card-body">
+        <div class="card">
+            <div class="card-header"> Standard Templates :
+                <button class="btn btn-sm btn-warning" style="margin-left:10px;" type="button" (click)="onSelectTemplate(rec)" *ngFor="let rec of templates">{{rec.name}}</button>
+                <button class="btn btn-sm btn-success float-right" (click)="onNewTemplate()"> Create Template</button>
+            </div>
+        </div>
+        <div class="card" *ngIf="currentTemplate !== undefined">
+            <div class="card-header panel-background">
+                Process Steps
+                <span class="float-right"><input type="checkbox" [(ngModel)]="currentTemplate.isOverrideWithRules"> Override Step with Rules</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Step Name</th>
+                            <th>SLA (Days)</th>
+                            <th>Action <button class="btn btn-success btn-sm" type="button"><fa-icon [icon]="faPlus" (click)="onAddNewStep();"></fa-icon></button></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="currentTemplate !== undefined">
+                        <tr *ngFor="let rec of currentTemplate.steps;index as i">
+                            <td><span *ngIf="!rec.isNew">{{rec.name}}</span>
+                                <select *ngIf="rec.isNew" class="form-control" (change)="onStepChange(rec);">
+                                    <option *ngFor="let step of availableStep" [ngValue]="step">{{step}}</option>
+                                </select>
+                            </td>
+                            <td><input type="number" [(ngModel)]="rec.sla" class="form-control form-control-sm" /></td>
+                            <td>
+                                <button *ngIf="!rec.isNew" class="btn btn-danger btn-sm" type="button"><fa-icon [icon]="faMinusCircle" (click)="removeStep(rec)"></fa-icon></button>
+                                <button *ngIf="!rec.isNew" class="btn btn-primary btn-sm" type="button" style="margin-left:5px" (click)="onMoveUp(i)"><fa-icon [icon]="faArrowUp"></fa-icon></button>
+                                <button *ngIf="!rec.isNew" class="btn btn-primary btn-sm" type="button" style="margin-left:5px" (click)="onMoveDown(i)"><fa-icon [icon]="faArrowDown"></fa-icon></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="alert alert-secondary col-md-3 float-right" style="margin-top:10px" *ngIf="currentTemplate !== undefined">
+
+            <div class="col-md-12"><label> Save As :</label>
+                <input class="form-control input-sm" [(ngModel)]="currentTemplate.name" type="text" />
+
+            </div>
+            <button class="btn btn-sm btn-warning float-right" type="button" style="margin-top:10px;" (click)="saveTemplate();">Save As Template</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="card paneSettings">
+    <div class="card-header panel-background">
+        {{taskName}}
+        <button type="button" class="btn btn-sm btn-warning float-right" aria-label="Close" (click)="dismiss()" style="margin-left:5px;">
+      <fa-icon [icon]="faTimesCircle"></fa-icon>
+    </button>
+
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="id_companyName">Employee Name</label>
+                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="applicant.name" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="id_companyName">SSN</label>
+                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="applicant.ssn" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="id_companyName">State</label>
+                    <select class="form-control" [(ngModel)]="applicant.state">
+                    <option value="NC">North Carolina</option>
+                    <option value="GA">Georgia</option>
+                    <option value="FL">Florida</option>
+                    <option value="NY">New York</option>
+                    <option value="TX">Texas</option>
+                </select>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="id_companyName">Annual Income</label>
+                    <input type="number" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="applicant.annualIncome" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="id_companyName">Monthly Debt</label>
+                    <input type="number" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="applicant.monthlyDebt" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="id_companyName">Bank</label>
+                    <select class="form-control" [(ngModel)]="applicant.bank">
+                    <option value="Bank of America">Bank Of America</option>
+                    <option value="Citi Bank">Citi Bank</option>
+                    <option value="Wells Fargo">Wells Fargo</option>
+                    <option value="Chase Bank">Chase Bank</option>
+                </select>
+
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header panel-background">Loan Info</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="id_companyName">Type</label>
+                                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="loan.type" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="id_companyName">Loan Amount</label>
+                                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="loan.amount" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="id_companyName">Application Date</label>
+                                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="loan.applicationDate" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="id_companyName">Status</label>
+                                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="loan.stateDelivered" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:15px" class="col-md-12">
+                <button class="btn btn-dark float-right btn-sm" style="margin-left: 5px;" (click)="updateStatusAndComplete()">Complete Task</button>
+                <!--  <button class="btn btn-primary float-right btn-sm" (click)="onClaimStart()">Start</button> -->
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
