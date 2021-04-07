@@ -195,3 +195,13 @@ export interface TaskInstanceList
      commentedDate : number,
      message : string;
  }
+
+ export interface ProcessRequirements {
+    steps? : StepDMN[]
+ }
+
+ export interface StepDMN{
+        name : string,
+        sequenceNumber : number,
+        sla : string
+}

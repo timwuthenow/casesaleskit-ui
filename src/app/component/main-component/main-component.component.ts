@@ -55,7 +55,7 @@ export class MainComponentComponent implements OnInit {
       } 
     ];
 
-    this.user = this.userList[3];
+    this.user = this.userList[0];
   }
 
  changeSelectedOption(option : UserRole)

@@ -64,7 +64,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="id_companyName">Type</label>
-                                    <select class="form-control input-sm" [(ngModel)]="loan.type">
+                                    <select class="form-control input-sm" [(ngModel)]="loan.type" (change)="getRequiredSteps()">
                                         <option value="Personal">Personal</option>
                                         <option value="Credit Card Consolidation">Credit Card Consolidation</option>
                                         <option value="Mortgage">Mortgage</option>
@@ -75,7 +75,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="id_companyName">Loan Amount</label>
-                                    <input type="text" class="form-control input-sm" id="id_companyName" autofocus [(ngModel)]="loan.amount" />
+                                    <input type="number" class="form-control input-sm" id="id_companyName" (change)="getRequiredSteps()" autofocus [(ngModel)]="loan.amount" />
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -98,7 +98,7 @@
                 <div class="card">
                     <div class="card-header panel-background">Template
                         <button class="btn btn-sm btn-primary float-right" style="margin-left:10px;" (click)="createCase()">Submit Application</button>
-                        <button class="btn btn-sm btn-warning float-right" style="margin-left:10px;" (click)="getRequiredSteps()">Use Rule Based Template</button>
+                        <!--   <button class="btn btn-sm btn-warning float-right" style="margin-left:10px;" (click)="getRequiredSteps()">Use Rule Based Template</button> -->
                         <!-- <button class="btn btn-sm btn-warning float-right" style="margin-left:10px;" (click)="getRequiredSteps()">Use Template</button> -->
 
                         <div class="float-right">

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Applicant, Loan, ProcessRequirementsWrapper, Step, StepWrapper, Template } from 'src/app/Models/Requests/Request';
+import { Applicant, Loan, ProcessRequirements, Step, StepWrapper, Template } from 'src/app/Models/Requests/Request';
 import { UserRole } from 'src/app/Models/UserRole';
 import { PAMServices } from 'src/app/service/PAMServices';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -17,9 +17,9 @@ export class ApplicantComponent implements OnInit {
   loan: Loan;
   stageMap: Map<string, Step>;
   templates: Template[];
-  currentTemplate : Template;
+  currentTemplate: Template;
   faUser = faUser;
-  processRequirements : ProcessRequirementsWrapper;
+  processRequirements: ProcessRequirements;
 
   @Input() user: UserRole;
 
@@ -64,54 +64,77 @@ export class ApplicantComponent implements OnInit {
   }
 
 
-  getRequiredSteps()
-  {
-      this.service.getSteps(this.applicant,this.loan).subscribe((data : any ) => {
-          console.log(data);
-          if(data.result && data.result["execution-results"].results && data.result["execution-results"].results instanceof Array)
-          {
-              var objects = data.result["execution-results"].results[0].value;
-              console.log(objects);
-              this.processRequirements = objects[2];
-              this.converttoTemplate();
-          }
-      });
-  }
-
-  private converttoTemplate() : Template {
-    this.currentTemplate = {
-        isOverrideWithRules : true,
-        name : "Result from Rules",
-        steps : new Array()
-    };
-    
-    this.processRequirements['com.redhat.ba.ProcessRequirements'].steps.forEach((rec : any) => {
-        var currentSla = rec.sla;
-        var currentStep : Step = {
-            isNew : false,
-            name : rec.name,
-            stage : this.stageMap.get(rec.name).stage,
-            sla : parseInt(currentSla.split("D")[0].split("P")[1]),
-            slaunit : "Days",
-            step : rec.sequenceNumber,
-            order : rec.sequenceNumber,
-            isTriggered : false
+  getRequiredSteps() {
+    /* this.service.getSteps(this.applicant,this.loan).subscribe((data : any ) => {
+        console.log(data);
+        if(data.result && data.result["execution-results"].results && data.result["execution-results"].results instanceof Array)
+        {
+            var objects = data.result["execution-results"].results[0].value;
+            console.log(objects);
+            this.processRequirements = objects[2];
+            this.converttoTemplate();
         }
+    }); */
 
-        this.currentTemplate.steps.push(currentStep);
+    this.service.getStepsDMN(this.applicant, this.loan).subscribe((data: any) => {
+      if (data.result && data.result["dmn-evaluation-result"]["dmn-context"]) {
+        this.processRequirements = {
+          steps: data.result["dmn-evaluation-result"]["dmn-context"].DecideTemplate
+        };
+        this.converttoTemplate();
+      }
     });
-    this.templates.push(this.currentTemplate);
-
-    return this.currentTemplate;
   }
 
-  
+  private converttoTemplate() {
+    this.currentTemplate = {
+      isOverrideWithRules: true,
+      name: "Result from Rules (" + this.loan.type + "-" + this.loan.amount + " )",
+      steps: new Array()
+    };
+
+    this.processRequirements.steps.forEach((rec: any) => {
+      var currentSla = rec.sla;
+      var currentStep: Step = {
+        isNew: false,
+        name: rec.name,
+        stage: this.stageMap.get(rec.name).stage,
+        sla: parseInt(currentSla.split("D")[0].split("P")[1]),
+        slaunit: "Days",
+        step: rec.sequenceNumber,
+        order: rec.sequenceNumber,
+        isTriggered: false
+      }
+
+      this.currentTemplate.steps.push(currentStep);
+    });
+
+    var isAvailable = false;
+    this.templates.forEach((rec: Template) => {
+      if (rec.name == "Result from Rules") {
+        isAvailable = true;
+        rec.steps = this.currentTemplate.steps;
+      }
+    });
+
+    if (!isAvailable) {
+      this.templates.push(this.currentTemplate);
+      //this.service.addTemplate(template);
+    } else {
+
+    }
+
+
+
+  }
+
+
 
   createCase() {
-     this.service.submitRequest(this.applicant,this.loan,this.currentTemplate).subscribe((data : any)=>{
-        window.alert("Case Instance Created : " + data);
-        this.service.triggerAdhocTask(this.currentTemplate.steps[0].name,data,{}).subscribe();
-     });
+    this.service.submitRequest(this.applicant, this.loan, this.currentTemplate).subscribe((data: any) => {
+      window.alert("Case Instance Created : " + data);
+      this.service.triggerAdhocTask(this.currentTemplate.steps[0].name, data, {}).subscribe();
+    });
   }
 
 }
