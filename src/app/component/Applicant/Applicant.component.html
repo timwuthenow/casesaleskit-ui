@@ -48,17 +48,23 @@
                 <div class="form-group">
                     <label for="id_companyName">Bank</label>
                     <select class="form-control" [(ngModel)]="applicant.bank">
-                        <option value="Bank of America">Bank Of America</option>
-                        <option value="Citi Bank">Citi Bank</option>
-                        <option value="Wells Fargo">Wells Fargo</option>
-                        <option value="Chase Bank">Chase Bank</option>
+                        <option value="Duty Holding Company">Duty Holding Bank</option>
+                        <option value="Sky High Financial">Sky High Financial</option>
+                        <option value="Green Market Bank">Green Market Bank</option>
+                        <option value="Goldguard Bank Inc.">Goldguard Bank Inc.</option>
                     </select>
 
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header panel-background">Loan Info</div>
+                    <div class="card-header panel-background">Loan Info
+                        <div class="float-right" style="margin-right:10px;" (click)="openDebug()">
+                            <button class="btn btn-sm btn-warning">
+                        <fa-icon [icon]="faTerminal"></fa-icon>
+                      </button>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
@@ -96,14 +102,14 @@
             </div>
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header panel-background">Template
+                    <div class="card-header panel-background">Proposed Steps
                         <button class="btn btn-sm btn-primary float-right" style="margin-left:10px;" (click)="createCase()">Submit Application</button>
                         <!--   <button class="btn btn-sm btn-warning float-right" style="margin-left:10px;" (click)="getRequiredSteps()">Use Rule Based Template</button> -->
                         <!-- <button class="btn btn-sm btn-warning float-right" style="margin-left:10px;" (click)="getRequiredSteps()">Use Template</button> -->
 
                         <div class="float-right">
                             <div>
-                                <select class="form-control form-control-sm" [(ngModel)]="currentTemplate">
+                                <select class="form-control form-control-sm" [(ngModel)]="currentTemplate" (change)="getTotalDue()">
                                     <option *ngFor="let rec of templates" [ngValue]="rec">{{rec.name}}</option>
                                 </select>
 
@@ -125,6 +131,10 @@
                                 <tr *ngFor="let rec of currentTemplate.steps;index as i">
                                     <td><span *ngIf="!rec.isNew">{{rec.name}}</span></td>
                                     <td>{{rec.sla}} ( {{rec.slaunit}} )</td>
+                                </tr>
+                                <tr>
+                                    <td><span style="font-weight: bold;color:#007bff;font-size: 15px;"> Total Estimated Days</span></td>
+                                    <td><span style="font-weight: bold;color:#007bff;font-size: 15px;">{{estimatedTotalDays}} (Days)</span></td>
                                 </tr>
                             </tbody>
                         </table>

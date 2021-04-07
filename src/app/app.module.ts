@@ -22,7 +22,8 @@ import { CaseAdministrationComponent } from 'src/app/component/CaseAdministratio
 import { TaskApproverComponent } from 'src/app/component/TaskApprover/TaskApprover.component';
 import { CompletedProcessInstanceComponent } from 'src/app/component/Modals/completed-process-instance/completed-process-instance.component';
 import { UpdateDueDateComponent } from 'src/app/component/Modals/UpdateDueDate/UpdateDueDate.component';
- 
+import { DebugModalComponent } from 'src/app/component/Modals/debug-modal/debug-modal.component';
+  
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +36,8 @@ import { UpdateDueDateComponent } from 'src/app/component/Modals/UpdateDueDate/U
     TaskApproverComponent,
     ApprovalTaskComponent,
     CompletedProcessInstanceComponent,
-    UpdateDueDateComponent
+    UpdateDueDateComponent,
+    DebugModalComponent
   ],
   imports: [
     BrowserModule,

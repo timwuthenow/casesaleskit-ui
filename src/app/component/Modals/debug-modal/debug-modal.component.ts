@@ -20,6 +20,7 @@ export class DebugModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.debug);
   }
   
   dismiss() {

@@ -29,14 +29,14 @@ export class PAMServices {
     }
     this.availableTemplates = new Array();
     this.stageMap = new Map();
-    this.stageMap.set("Application Review", { name: "Application Review", stage: "stage1", step: 1, sla: 10, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Credit Check", { name: "Credit Check", stage: "stage2", step: 2, sla: 1, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Proof of Income", { name: "Proof of Income", stage: "stage3", step: 3, sla: 5, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Risk Evaluation", { name: "Risk Evaluation", stage: "stage4", step: 4, sla: 3, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Loan Final Approval", { name: "Loan Final Approval", stage: "stage5", step: 5, sla: 10, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Precoverage Letter", { name: "Precoverage Letter", stage: "stage6", step: 6, sla: 2, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Home Appraisal", { name: "Home Appraisal", stage: "stage7", step: 7, sla: 4, slaunit: "days", isNew: false, count: 0, isTriggered: false });
-    this.stageMap.set("Title Closing", { name: "Title Closing", stage: "stage8", step: 8, sla: 3, slaunit: "days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Application Review", { name: "Application Review", stage: "stage1", step: 1, sla: 10, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Credit Check", { name: "Credit Check", stage: "stage2", step: 2, sla: 1, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Proof of Income", { name: "Proof of Income", stage: "stage3", step: 3, sla: 5, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Risk Evaluation", { name: "Risk Evaluation", stage: "stage4", step: 4, sla: 3, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Loan Final Approval", { name: "Loan Final Approval", stage: "stage5", step: 5, sla: 10, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Precoverage Letter", { name: "Precoverage Letter", stage: "stage6", step: 6, sla: 2, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Home Appraisal", { name: "Home Appraisal", stage: "stage7", step: 7, sla: 4, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
+    this.stageMap.set("Title Closing", { name: "Title Closing", stage: "stage8", step: 8, sla: 3, slaunit: "Days", isNew: false, count: 0, isTriggered: false });
     this.initTemplates();
   }
 
@@ -184,7 +184,7 @@ export class PAMServices {
     return this.http.post(url, postObject, { headers });
   }
 
-  getStepsDMN(applicant: Applicant, loan: Loan) {
+  getStepsDMN(applicant: Applicant, loan: Loan,request : ServiceRequest){
     var postObj = {
       "model-namespace": "https://kiegroup.org/dmn/_2E7F0174-0917-4BF7-8B0A-CA5E4A9BE634",
       "model-name": "rules",
@@ -201,6 +201,8 @@ export class PAMServices {
       'Authorization': 'Basic ' + btoa(this.kieSettings.username + ":" + this.kieSettings.password),
       'content-type': 'application/json'
     };
+
+   request.request = postObj;
 
     return this.http.post(url, postObj, { headers });
     

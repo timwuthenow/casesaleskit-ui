@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Applicant, Loan, ProcessRequirements, Step, StepWrapper, Template } from 'src/app/Models/Requests/Request';
+import { Applicant, Loan, ProcessRequirements, ServiceRequest, ServiceResponse, Step, StepWrapper, Template } from 'src/app/Models/Requests/Request';
 import { UserRole } from 'src/app/Models/UserRole';
 import { PAMServices } from 'src/app/service/PAMServices';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser,faTerminal } from '@fortawesome/free-solid-svg-icons';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { DebugModalComponent } from '../Modals/debug-modal/debug-modal.component';
 
 @Component({
   selector: 'app-Applicant',
@@ -11,6 +13,15 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 })
 export class ApplicantComponent implements OnInit {
 
+  serviceRequest : ServiceRequest = {
+    request : {}
+  };
+
+  serviceResponse : ServiceResponse = {
+    response : {}
+  };
+
+  estimatedTotalDays : number;
   applicantList: Applicant[];
   service: PAMServices;
   applicant: Applicant;
@@ -19,11 +30,12 @@ export class ApplicantComponent implements OnInit {
   templates: Template[];
   currentTemplate: Template;
   faUser = faUser;
+  faTerminal = faTerminal;
   processRequirements: ProcessRequirements;
 
   @Input() user: UserRole;
 
-  constructor(service: PAMServices) {
+  constructor(private modalService: NgbModal,service: PAMServices) {
     this.service = service;
     this.stageMap = this.service.getStageMap();
     this.templates = this.service.getTemplates();
@@ -36,7 +48,7 @@ export class ApplicantComponent implements OnInit {
       name: "Applicant 1",
       age: 40,
       annualIncome: 80000,
-      bank: "Bank of America",
+      bank: "Goldguard Bank Inc.",
       loanamount: 5000,
       monthlyDebt: 2000,
       ssn: "123-23-2334",
@@ -45,7 +57,7 @@ export class ApplicantComponent implements OnInit {
       name: "Applicant 2",
       age: 40,
       annualIncome: 90000,
-      bank: "Citi Bank",
+      bank: "Green Market Bank",
       loanamount: 50000,
       monthlyDebt: 2000,
       ssn: "122-23-2334",
@@ -61,6 +73,7 @@ export class ApplicantComponent implements OnInit {
 
     this.applicant = this.applicantList[0];
     this.currentTemplate = this.service.getTemplates()[0];
+    this.getTotalDue();
   }
 
 
@@ -76,7 +89,8 @@ export class ApplicantComponent implements OnInit {
         }
     }); */
 
-    this.service.getStepsDMN(this.applicant, this.loan).subscribe((data: any) => {
+    this.service.getStepsDMN(this.applicant, this.loan,this.serviceRequest).subscribe((data: any) => {
+      this.serviceResponse.response = data;
       if (data.result && data.result["dmn-evaluation-result"]["dmn-context"]) {
         this.processRequirements = {
           steps: data.result["dmn-evaluation-result"]["dmn-context"].DecideTemplate
@@ -107,6 +121,7 @@ export class ApplicantComponent implements OnInit {
       }
 
       this.currentTemplate.steps.push(currentStep);
+      this.getTotalDue();
     });
 
     var isAvailable = false;
@@ -129,6 +144,14 @@ export class ApplicantComponent implements OnInit {
   }
 
 
+  getTotalDue()
+  {
+    this.estimatedTotalDays = 0;
+    this.currentTemplate.steps.forEach((step : Step) => {
+      this.estimatedTotalDays = this.estimatedTotalDays + step.sla;
+    });
+  }
+
 
   createCase() {
     this.service.submitRequest(this.applicant, this.loan, this.currentTemplate).subscribe((data: any) => {
@@ -136,5 +159,23 @@ export class ApplicantComponent implements OnInit {
       this.service.triggerAdhocTask(this.currentTemplate.steps[0].name, data, {}).subscribe();
     });
   }
+
+  openDebug() {
+    const modalRef = this.modalService.open(DebugModalComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl', backdrop: 'static' });
+
+    modalRef.result.then((result) => {
+
+    }, (reason) => {
+     
+    });
+
+    modalRef.componentInstance.debug = {
+      response : this.serviceResponse,
+      request : this.serviceRequest,
+      url : this.service.getCurrentKieSettings().baseurl + "/services/rest/server/containers/" + this.service.getCurrentKieSettings().dmcontainerAlias+"/dmn"
+    }
+    
+  }
+
 
 }
