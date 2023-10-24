@@ -18,12 +18,12 @@ export class PAMServices {
     this.kieSettings = <KieSettings>this.cookieService.getObject("kieSettingsCaseSalesKit")
     if (this.kieSettings === undefined) {
       this.kieSettings = {
-        baseurl: "http://localhost:8080/kie-server",
+        baseurl: "https://localhost:8080/kie-server",
         dmcontainerAlias: "casesaleskit-rules_1.0.0-SNAPSHOT",
         picontainerAlias: "casesaleskit-process_1.0.0-SNAPSHOT",
         processId: "casesaleskit-process.DynamicLoanProcess",
-        username: "pamAdmin",
-        password: "redhatpam1!",
+        username: "bamAdmin",
+        password: "ibmpam1!",
         isOpenShift: false
       };
     }
